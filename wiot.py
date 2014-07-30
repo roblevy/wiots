@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-class wiot:
+class world_input_output_table:
     def initialise(self):
         #%%
         # Import csv
@@ -51,13 +51,12 @@ class wiot:
         # The identity matrix, I
         ident = np.eye(final_demand.shape[0])
         
-        self.tot_prod = tot_prod
         self.final_demand = final_demand
         self.tech_coefs = tech_coefs
         self.investments = investments
         self.ident = ident
         
-    def solve(self, final_demand=None):
+    def total_production(self, final_demand=None):
         if final_demand is None:
             final_demand = self.final_demand
         #%%
@@ -67,6 +66,8 @@ class wiot:
         a = self.tech_coefs
         f = self.final_demand
         n = self.investments
+        tot_prod = np.linalg.solve(i - a, f + n)
+        return pd.Series(tot_prod, index=final_demand.index)
         
-        return np.linalg.solve(i - a, f + n)
-        
+wiot = world_input_output_table()
+wiot.initialise()
